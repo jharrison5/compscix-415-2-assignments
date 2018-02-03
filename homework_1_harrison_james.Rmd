@@ -26,3 +26,17 @@ unique(region_col)
 
 Question 2: Sure can - see the region_col that I created above.
 
+
+```{r}
+WorldCities %>% select(country) %>% unique()
+```
+
+Question 3: Sure can - see above.
+
+```{r}
+WorldCities %>% ggplot(aes(x = population)) + geom_histogram() + xlab('City Population')
+```
+```{r}
+WorldCities %>% ggplot(aes(x = population)) + geom_histogram() + xlab('WOW - Look at that City Population') + ylab('WOW - that count') + ggtitle('Jamess Cities')
+```
+Question 4 - See above :)
