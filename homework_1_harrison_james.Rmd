@@ -7,5 +7,22 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(mdsr)
+library(tidyverse)
+data("WorldCities")
 ```
 My Github repository for my assignments can be found at this URL: https://github.com/jharrison5/compscix-415-2-assignments
+
+Question 1: there are 10 variables in the world cities data set. To name a few, there are code, name of the city, latitutde, longitude, and other similar ones. The number of observations is 23,018!!! WOW
+
+```{r}
+WorldCities <- head(WorldCities, 200) # 200 rows
+country_col <- WorldCities$country
+unique(country_col)
+
+region_col <- WorldCities$region
+unique(region_col)
+```
+
+Question 2: Sure can - see the region_col that I created above.
+
