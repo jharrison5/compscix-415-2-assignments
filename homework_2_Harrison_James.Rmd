@@ -1,0 +1,23 @@
+---
+title: "Homework_2_harrison_james"
+author: "James Harrison"
+date: "2/11/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+```
+
+
+Excercise 3.2.4:
+```{r}
+ggplot(data = mpg)
+```
+1. I see a blank graph
+2. MPG has 11 variable/rowss and 234 observations/rows
+
