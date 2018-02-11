@@ -13,11 +13,35 @@ knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 ```
 
+<br>
 
-Excercise 3.2.4:
+<b>Excercise 3.2.4:</b><br>
+
+1.I see a blank graph<br>
 ```{r}
 ggplot(data = mpg)
 ```
-1. I see a blank graph
-2. MPG has 11 variable/rowss and 234 observations/rows
+<br><br>
+
+2. MPG has 11 variable/rowss and 234 observations/rows<br>
+
+3. drv means what type of drive train the vehicle has, front wheel drive, rear wheel drive, or 4 wheel drive.<br>
+
+4. <br>
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = hwy, y = cyl))
+```
+<br>
+<br>
+5. <br>
+```{r}
+ggplot(data = mpg) +
+  geom_point(mapping = aes(x = class, y = drv))
+```
+<br>this graph is not so useful since the scatter plot doesn't lend itself to displaying groupings. What I really want to see is what types of cars are rwd, fwd, etc. - and it takes a while to determine that.<br><br>
+
+
+
+
 
