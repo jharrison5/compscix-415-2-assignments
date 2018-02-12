@@ -41,7 +41,32 @@ ggplot(data = mpg) +
 ```
 <br>this graph is not so useful since the scatter plot doesn't lend itself to displaying groupings. What I really want to see is what types of cars are rwd, fwd, etc. - and it takes a while to determine that.<br><br>
 
+<b>Excercise 3.3.1</b>
+<br>
+1. It's missing a close parantheses so the color is being specified in the wrong spot
+<br>
+2. When you run MPG you can see the variable type above each column, <chr> <dbl> <int> etc. In this data set class, fl, drv, trans, manufacturer, model are chr, and numberical variables are displ, year, cyl, cty, hwy
 
+3. <br>
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = class, size = cyl, shape = fl))
+```
+
+Aesthetics behave differently - for example I couldn't assign a shape to a continuous variable. Size was not advisable to be used for categorical data.
+
+4. <br> It lets me do it and the legend is combined automatically!
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = fl, shape = fl))
+```
+
+5. The stroke adds a border around a shape. Shapes 21-24 can have a border<br>
+6. It turns it into a boolean expression - so true or false, very cool!<br>
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy, color = displ < 5, shape = fl))
+```
 
 
 
