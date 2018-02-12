@@ -69,4 +69,30 @@ ggplot(data = mpg) +
 ```
 
 
+<b>Excercise 3.5.1</b>
+4. Faceted data makes it very clear what you're looking at for each characteristic you're examoing, so in this case the model of the car. But the color is better if you want to look at the trend in data all together. Pros and cons. With a huge amount of data, it could be hard to see the individual patterns without faceting. <br>
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy)) + 
+  facet_wrap(~ class, nrow = 3)
+```
 
+5. nrow specifies how many rows of mini, faceted graphs a grid should have. Ncol does the same but for columns. You can also scale, shrink, add labels, switch labels, change the direction. Facet grid is better for when you have 2 discrete variables and all combinations of the variables exist.
+
+
+<br><br>
+<b>Excercise 3.6.1</b><br>
+1. Line Chart = Line Geom, box plot = box geom, histogram = histogram geom, area chart = area geom
+<br>
+2. I predict we'll have a smooth line with scatter on either side
+```{r}
+ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) + 
+  geom_point() + 
+  geom_smooth(se = FALSE)
+```
+3. This removes the legend<br>
+4. The se is the confidence interval around smooth<br>
+5. No they should look the same since the same parameters apply for both<br><br>
+
+<b>Excercise 3.7.1</b><br>
+2. Geom bar is to show bar charts that show counts, geom col is to show means
