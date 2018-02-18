@@ -12,20 +12,110 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Markdown
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+library(tidyverse)
+library(nycflights13)
 ```
 
-## Including Plots
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+<h2>Excercise 3.8.1</h2>
+1. The problem here is there could be data stacked in the same category which doesn't give us the full picture of what's happening with the data. If we change position with Jitter we can avoid this.
+<br>
+```{r}
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = cty, y = hwy), position="jitter")
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+<br>
+2. The height and width paramater control the amount of jitter in those respective directions, both positive and negative.
+<br>
+3. Geom count instead of adding extra observations counts the number of overlapping observations and plots them - good for overlapping data as well. Both work well - at some point it's whatever helps tell the story better.
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_count()
+```
+
+4. The default position for geom_boxplot() is dodge
+```{r}
+ggplot(data = mpg) + 
+  geom_boxplot(mapping = aes(x = class, y = hwy), position = "dodge") 
+```
+
+<br>
+<h2>Excercises 3.9.1</h2>
+2. Labs() lets you modify the labels for the axis, legend, and plot.
+<br>
+4. coord_fixed() means the ratio between the x and y coordinates is fixed, i.e. 1 to 1 so there will not be 5 moves in y for every 1 in x. geom_abline lets you draw a reference line for the plot. So in this case it's a line using the slope and intercept of the plot. It makes it useful to read what's happening which means theres a direct relationship between city and hwy, for example they cross 20 and 20 at the same time and 30 and 30 at the same time.
+
+<br>
+<h2>Excercises 4.4</h2>
+1. Ha - the second time it's written it's using a 1 instead of an I in the variable name - so in other words it's not the same variable.
+<br>
+2. Bunch of typos
+```{r}
+library(tidyverse)
+
+ggplot(data = mpg) + 
+  geom_point(mapping = aes(x = displ, y = hwy))
+
+filter(mpg, cyl == 8)
+
+
+#this is from a different data set
+filter(diamonds, carat > 3)
+```
+
+<br>
+<h2>Excercises 5.2.4</h2>
+1. Whew lots of filtering did 1.1 through 1.5 in one expression breaking out for the others as they seem to contradict
+```{r}
+flights <- nycflights13::flights
+filter(flights, arr_delay > 120 & (dest == "IAH" | dest == "HOU") & (carrier == "UA" | carrier == "DL" | carrier == "AA") & (month < 10 & month > 6) & dep_delay < 0)
+```
+
+<br>
+1.6
+```{r}
+flights <- nycflights13::flights
+filter(flights, dep_delay > 60 & (dep_delay - arr_delay) > 30)
+```
+1.7
+```{r}
+flights <- nycflights13::flights
+filter(flights, dep_time < 0600)
+```
+<br>
+2. Between can simpligy the last expression see:
+```{r}
+flights <- nycflights13::flights
+filter(flights, between(dep_time, 0, 0600))
+```
+<br>
+3. This must be cancelled flights
+```{r}
+flights <- nycflights13::flights
+filter(flights, is.na(dep_time))
+```
+<br>
+4. Well NA ^ 0 makes sense because any value to the 0 is 1. NA or true, I'm guessing whenever it compares unknown to another value it selects the other value - but unknown times 0 is unknown so I guess I'm confused why that would be.
+
+<h2> Excercises 5.4.1</h2>
+1. We could use select,  we could also set them equal to a variable
+```{r}
+select(flights, dep_time, dep_delay, arr_time, arr_delay, dep_time)
+```
+2. Nothing seems to happen differently - it's only displayed once
+<br>
+3. Not sure what to do with this one
+```{r}
+
+vars <- c("year", "month", "day", "dep_delay", "arr_delay")
+
+```
+4. That surprises me but it's cool - very useful
+```{r}
+select(flights, contains("TIME"))
+
+```
+
