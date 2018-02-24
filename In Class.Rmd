@@ -1,0 +1,17 @@
+---
+title: "In Class"
+author: "James Harrison"
+date: "2/20/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+file.path <- 'Users/james.harrison/compscix-415-2-assignments/flights.csv'
+csv_data <- read_csv(file = file_path)
+```
+

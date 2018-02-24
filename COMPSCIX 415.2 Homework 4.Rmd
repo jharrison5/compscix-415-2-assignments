@@ -1,0 +1,13 @@
+---
+title: "COMPSCIX 415.2 Homework 4"
+author: "James Harrison"
+date: "2/24/2018"
+output: html_document
+self_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<h1>Homework 4</h1>
