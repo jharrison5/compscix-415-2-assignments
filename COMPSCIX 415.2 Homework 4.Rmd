@@ -36,7 +36,7 @@ not_cancelled %>%
           )
 ```
 <br><br>
-4. Cancelled flights to average delay
+4. Cancelled flights to average delay - yes there is a correlation between the longer delays and more cancelled flights.
 ```{r}
 cancelled <- flights %>% 
   filter(is.na(dep_delay), is.na(arr_delay))
@@ -46,12 +46,24 @@ cancelled <- flights %>%
 #(per_month   <- summarise(daily, flights = n(), delay = mean(arr_delay)))
 
 
-by_month <- group_by(flights, year, month)
-summarize(by_month,
-                         count = n(),
-                         arr_delay = mean(arr_delay, na.rm = TRUE),
-                         dep_delay = mean(dep_delay, na.rm = TRUE),
-                         )
+#by_month <- group_by(flights, year, month)
+#summarize(by_month,
+                        # count = n(),
+                        # arr_delay = mean(arr_delay, na.rm = TRUE),
+                        # dep_delay = mean(dep_delay, na.rm = TRUE),
+                        # )
+
+james_flights <- flights %>% 
+  mutate(cancel = (is.na(dep_delay) | is.na(arr_delay))) %>%
+  group_by( year, month, day)%>%
+  summarize(
+      arr_delay = mean(arr_delay, na.rm = TRUE),
+      cancelled = mean(cancel)
+  ) 
+  ggplot(james_flights, aes(x=arr_delay, y=cancelled))+
+    geom_point()
+
+
 ```
 <br><br>
 5. F9 has the worst delays, but if we add in the destination as well United to STL is the worst route.
@@ -65,4 +77,12 @@ arrange(new_flights, desc(arr_delay))
 <br><br>
 
 <h3>Section 10.5: #1, #2, #3 and #6 only</h3>
-1. 
+1. When printing a tibble only prints the first ten rows and each column prints both name and type.
+<br><br>
+2. Tibbles let you quickly pull out data by name with tools like $ and [|]. In the example you can quickly see variable x in df using $. Tibbles are also more strict - they won't do partial matching and warn you if the column you're accessing doesn't exist.
+<br><br>
+3. Use the $ tool - can grab variables by name.
+6. The tibble.max_extra_cols controls extra columns printed in a tibble.
+<br><br>
+
+
