@@ -241,9 +241,59 @@ Section 10.5: #1, #2, #3 and #6 only
 Section 12.3.3: #2, #3 and #4 only
 </h3>
 <ol start="2" style="list-style-type: decimal">
-<li><p>You need the numbers in quotations. <br><br></p></li>
-<li></li>
+<li>You need the numbers in quotations. <br><br></li>
+<li>It fails because it has multiple values for one type - philip woods has two ages - if we add another column for age 1 and age 2 it could work. <br><br></li>
+<li>We need to gather the tibble - the variables are the pregnant true false, a gender, and a count of how many are in each category.</li>
 </ol>
+<pre class="r"><code>preg &lt;- tribble(
+  ~pregnant, ~male, ~female,
+  &quot;yes&quot;,     NA,    10,
+  &quot;no&quot;,      20,    12
+)
+
+gather(preg, gender, count, male, female)</code></pre>
+<pre><code>## # A tibble: 4 x 3
+##   pregnant gender count
+##   &lt;chr&gt;    &lt;chr&gt;  &lt;dbl&gt;
+## 1 yes      male    NA  
+## 2 no       male    20.0
+## 3 yes      female  10.0
+## 4 no       female  12.0</code></pre>
+<br><br>
+<h3>
+Section 12.4.3: #1 and #2 only
+</h3>
+<ol style="list-style-type: decimal">
+<li>In separate() - extra can be used to control what happens when separating a character vector with extra values- you can warn, drop, or merge the extra values. Fill can be used in the opposite case when there aren’t enough values - you can warn, fill right with missing values or fill left with missing values. <br><br></li>
+<li>Remove gets rid of the original input column you’re working with - you’d keep it as false if you want to maintain that column as well.</li>
+</ol>
+<h3>
+Additional Baby Names Questions
+</h3>
+<p>Load:<br></p>
+<pre class="r"><code>baby_n &lt;- read.table(&quot;/Users/james.harrison/compscix-415-2-assignments/baby_names.txt&quot;,
+                        header = TRUE, 
+                        sep = &quot;|&quot;)
+glimpse(baby_n)</code></pre>
+<pre><code>## Observations: 30,000
+## Variables: 5
+## $ year &lt;int&gt; 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 188...
+## $ sex  &lt;fct&gt; F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, ...
+## $ name &lt;fct&gt; Mary, Anna, Emma, Elizabeth, Minnie, Margaret, Ida, Alice...
+## $ n    &lt;int&gt; 7065, 2604, 2003, 1939, 1746, 1578, 1472, 1414, 1320, 128...
+## $ prop &lt;dbl&gt; 0.072384329, 0.026679234, 0.020521700, 0.019865989, 0.017...</code></pre>
+<p>Export:<br></p>
+<pre class="r"><code>saveRDS(baby_n, file = &quot;/Users/james.harrison/compscix-415-2-assignments/baby_names.rds&quot;)</code></pre>
+<p>Re-import:<br></p>
+<pre class="r"><code>baby_n2 &lt;- readRDS(file = &quot;/Users/james.harrison/compscix-415-2-assignments/baby_names.rds&quot;)
+glimpse(baby_n2)</code></pre>
+<pre><code>## Observations: 30,000
+## Variables: 5
+## $ year &lt;int&gt; 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 1880, 188...
+## $ sex  &lt;fct&gt; F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, ...
+## $ name &lt;fct&gt; Mary, Anna, Emma, Elizabeth, Minnie, Margaret, Ida, Alice...
+## $ n    &lt;int&gt; 7065, 2604, 2003, 1939, 1746, 1578, 1472, 1414, 1320, 128...
+## $ prop &lt;dbl&gt; 0.072384329, 0.026679234, 0.020521700, 0.019865989, 0.017...</code></pre>
 
 
 

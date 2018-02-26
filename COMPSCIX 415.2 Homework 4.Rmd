@@ -106,3 +106,24 @@ gather(preg, gender, count, male, female)
 <br><br>
 2. Remove gets rid of the original input column you're working with - you'd keep it as false if you want to maintain that column as well. 
 
+<h3>Additional Baby Names Questions</h3>
+Load:<br>
+```{r}
+baby_n <- read.table("/Users/james.harrison/compscix-415-2-assignments/baby_names.txt",
+                        header = TRUE, 
+                        sep = "|")
+glimpse(baby_n)
+```
+Export:<br>
+```{r}
+saveRDS(baby_n, file = "/Users/james.harrison/compscix-415-2-assignments/baby_names.rds")
+
+```
+Re-import:<br>
+```{r}
+baby_n2 <- readRDS(file = "/Users/james.harrison/compscix-415-2-assignments/baby_names.rds")
+glimpse(baby_n2)
+
+```
+
+
