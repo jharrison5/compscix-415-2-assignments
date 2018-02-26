@@ -85,4 +85,24 @@ arrange(new_flights, desc(arr_delay))
 6. The tibble.max_extra_cols controls extra columns printed in a tibble.
 <br><br>
 
+<h3>Section 12.3.3: #2, #3 and #4 only</h3>
+2. You need the numbers in quotations.
+<br><br>
+3. It fails because it has multiple values for one type - philip woods has two ages - if we add another column for age 1 and age 2 it could work.
+<br><br>
+4. We need to gather the tibble - the variables are the pregnant true false, a gender, and a count of how many are in each category.
+```{r}
+preg <- tribble(
+  ~pregnant, ~male, ~female,
+  "yes",     NA,    10,
+  "no",      20,    12
+)
+
+gather(preg, gender, count, male, female)
+```
+<br><br>
+<h3>Section 12.4.3: #1 and #2 only</h3>
+1. In separate() - extra can be used to control what happens when separating a character vector with extra values- you can warn, drop, or merge the extra values. Fill can be used in the opposite case when there aren't enough values - you can warn, fill right with missing values or fill left with missing values.
+<br><br>
+2. Remove gets rid of the original input column you're working with - you'd keep it as false if you want to maintain that column as well. 
 
