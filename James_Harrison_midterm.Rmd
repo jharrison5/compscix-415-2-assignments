@@ -1,0 +1,12 @@
+---
+title: "COMPSCIX 415.2 Homework 5/Midterm"
+author: "James Harrison"
+date: "3/3/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<h1>Data Science Midterm</h1>
