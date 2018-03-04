@@ -13,6 +13,7 @@ library(tidyverse)
 ```
 
 #Data Science Midterm
+Check out my git: https://github.com/jharrison5/compscix-415-2-assignments/blob/master/James_Harrison_midterm.html 
 
 ###The Tidyverse Packages
 1. 
