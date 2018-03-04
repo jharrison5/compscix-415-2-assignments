@@ -2,11 +2,166 @@
 title: "COMPSCIX 415.2 Homework 5/Midterm"
 author: "James Harrison"
 date: "3/3/2018"
-output: html_document
+output: 
+  html_document:
+    toc: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
-<h1>Data Science Midterm</h1>
+#Data Science Midterm
+
+###The Tidyverse Packages
+1. 
+Plotting - ggplot<br>
+Data munging / wrangling - dplry<br>
+Reshaping - dplyr<br>
+Importing / exporting - tibbles<br>
+
+2. 
+Plotting - geom point, geom boxplot<br>
+Data munging / wrangling - filter(), mutate()<br>
+Reshaping - spread(), gather() <br>
+Importing / exporting - read_table(), write_rds()<br>
+
+###R Basics
+1. Fix this code: My_data.name___is.too00ooLong! <- c( 1 , 2 , 3 )
+```{r}
+My_data.name___is.too00ooLong <- c( 1 , 2 , 3 )
+My_data.name___is.too00ooLong
+```
+Works when you remove the !<br>
+
+2. Fix this code: my_string <- C('has', 'an', 'error', 'in', 'it)
+```{r}
+my_string <- c('has', 'an', 'error', 'in', 'it')
+my_string
+```
+Needs a lowercase C and a ' at the end<br>
+
+3. Comment on the code
+```{r}
+my_vector <- c(1, 2, '3', '4', 5)
+my_vector
+```
+because of the added quatations on a couple of the values, it's considering all of them strings rather than numbers.<br>
+
+###Data Import/Export
+1. Import the data
+```{r}
+rail_trail <- read.table("/Users/james.harrison/compscix-415-2-assignments/rail_trail.txt",
+                        header = TRUE, 
+                        sep = "|")
+
+glimpse(rail_trail)
+```
+<br>
+2. Export
+```{r}
+saveRDS(rail_trail, file = "/Users/james.harrison/compscix-415-2-assignments/rail_trail.rds")
+```
+Re-import
+```{r}
+rail_trail2 <- readRDS(file = "/Users/james.harrison/compscix-415-2-assignments/rail_trail.rds")
+glimpse(rail_trail2)
+```
+
+###Visualization
+1. 
+a. it has multiple variables on the y axis but separated, gender and age buckets - lifetime kind of makes sense to use age buckets but what does gender have to do with it?
+b. the colors aren't helpful
+c. it's hard to understand the big picture/story, i.e. what's the overall breakdown
+<br>
+2. Recereate the graph.
+```{r}
+
+ggplot(diamonds, aes(x = carat, y = cut, color = color)) + 
+  geom_boxplot() 
+
+```
+<br>
+3. ?
+<br>
+###Data Munging and Wrangling
+1. Is this data tidy? It needs to be spread
+```{r}
+table_new <- spread(table2, 'type', 'count')
+table_new
+```
+<br>
+2. Add a price per carat variable to diamonds
+```{r}
+newdiamonds <- diamonds %>% mutate(
+  price_per_carat = price / carat
+)
+```
+<br>
+3. Works like this:
+```{r}
+new_d <- diamonds %>% group_by(cut) %>%
+  summarise(
+    total = n(),
+    over_1k = sum(price > 1000 & carat > 1.5),
+    Proportion = over_1k / total
+  )
+
+new_d
+```
+<br>
+
+###EDA
+1. It runs from the year 2000 to 2015
+```{r}
+glimpse(txhousing)
+txhousing %>% summarise(
+  min_date = min(date),
+  max_date = max(date)
+  
+)
+```
+<br>
+2. There are 46 different 46 cities.
+```{r}
+length(unique(txhousing$city))
+```
+<br>
+3. Houston in July 2015 was the highest in Sales.
+```{r}
+txhousing %>% arrange(desc(sales))
+```
+<br>
+4. Listings to sales. Looks like a pretty direct correlation in the number of listings to the number of sales.
+```{r}
+  ggplot(txhousing, aes(x=listings, y=sales))+
+    geom_point()
+```
+<br>
+5. Sales missing by city:
+```{r}
+txhousing %>% group_by(city) %>%
+  summarize(
+    total = n(),
+    missing = sum(sales, na.rm = TRUE),
+    proportion = missing / total
+    
+  )
+```
+<br>
+6. The distribution when grouped by city shows the median of the city's months, where as when not grouped by city you can see the median for every month. Houston and Dallas stick out as very high. Less than 500 could be noise in the distribution.
+```{r}
+by_city <- txhousing %>% group_by(city, month, year) %>% filter(sales > 500) %>% group_by(city) %>%
+  summarize(
+    median = median(sales)
+  )
+
+not_by_city <- txhousing %>% group_by(city, month, year) %>% filter(sales > 500)  %>%
+  summarize(
+    median = median(sales)
+  )
+by_city %>% arrange(desc(median))
+not_by_city %>% arrange(desc(median))
+```
+
