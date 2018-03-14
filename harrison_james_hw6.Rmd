@@ -7,6 +7,113 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
 ```
 
 #Homework 6
+###Excercise 1
+```{r}
+whick <- readRDS(file = "/Users/james.harrison/compscix-415-2-assignments/whickham.rds")
+glimpse(whick)
+```
+
+1. There are 3 variables - outcome, smoker, and age.
+2. There are 1314 observations on women for these variables.
+3. 
+```{r}
+library(mosaicData)
+library(tidyverse)
+Whickham %>% count( smoker , outcome )
+```
+4. ?
+```{r}
+whick2 <- Whickham
+#age_ordered <- ordered(Whickham$age, levels = c(Whickham$age <= 44,Whickham$age > 44 & Whickham$age<= 64,Whickham$age > 64 ))
+```
+
+###Excercise 2
+1. 
+```{r}
+library(tidyverse)
+n <- 10000
+# look at ?rgamma to read about this function
+gamma_samp <- tibble(x = rgamma(n, shape = 1, scale = 2))
+
+gamma_samp %>% ggplot() +
+  geom_histogram(aes(x = x)) +
+  theme_bw()
+```
+2. The mean samp is 2.0034, the variance is 3.889175.
+```{r}
+mean_samp <- gamma_samp %>% .[['x']] %>% mean()
+var_samp <- gamma_samp %>% .[['x']] %>% var()
+
+var_samp
+```
+
+3. 
+```{r}
+library(tidyverse)
+n <- 30
+# look at ?rgamma to read about this function
+gamma_samp2 <- tibble(x = rgamma(n, shape = 1, scale = 2))
+
+mean_samp <- gamma_samp2 %>% .[['x']] %>% mean()
+var_samp <- gamma_samp2 %>% .[['x']] %>% var()
+mean_samp
+var_samp
+```
+
+4. & 5.
+```{r}
+# create a vector with 10000 NAs
+mean_samp <- rep(NA, 10000)
+# start a loop
+for(i in 1:10000) {
+g_samp <- rgamma(30, shape = 1, scale = 2)
+mean_samp[i] <- mean(g_samp)
+}
+# Convert vector to a tibble
+mean_samp <- tibble(mean_samp)
+
+mean_samp %>% ggplot() +
+  geom_histogram(aes(x = mean_samp)) +
+  theme_bw()
+
+```
+
+6. 
+```{r}
+# create a vector with 10000 NAs
+mean_samp <- rep(NA, 10000)
+# start a loop
+for(i in 1:10000) {
+g_samp <- rgamma(30, shape = 1, scale = 2)
+mean_samp[i] <- mean(g_samp)
+}
+
+# Convert vector to a tibble
+mean_samp <- tibble(mean_samp)
+
+summarise(mean_samp, mean=mean(mean_samp), sd=sd(mean_samp))
+
+```
+
+7. The std deviation is much lower where as the mean stays the same - I guess that makes sense since we have a much larger sample size.
+
+8. 
+```{r}
+# create a vector with 10000 NAs
+mean_samp <- rep(NA, 10000)
+# start a loop
+for(i in 1:10000) {
+g_samp <- rgamma(300, shape = 1, scale = 2)
+mean_samp[i] <- mean(g_samp)
+}
+
+# Convert vector to a tibble
+mean_samp <- tibble(mean_samp)
+
+summarise(mean_samp, mean=mean(mean_samp), sd=sd(mean_samp))
+```
+The mean stays about the same but the standard deviation gets even lower.
