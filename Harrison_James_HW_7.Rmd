@@ -1,0 +1,83 @@
+---
+title: "COMPSCIX 415.2 Homework 7"
+author: "James Harrison"
+date: "3/17/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(tidyverse)
+```
+
+#Homework 7
+###Excercise 1
+There are 81 columns with 1,460 observations in this data set.
+```{r}
+train <- read.csv(file = "/Users/james.harrison/compscix-415-2-assignments/train.csv")
+glimpse(train)
+```
+
+<br>
+###Excercise 2
+```{r}
+# load packages
+library(broom)
+# When taking a random sample, it is often useful to set a seed so that
+# your work is reproducible. Setting a seed will guarantee that the same
+# random sample will be generated every time, so long as you always set the
+# same seed beforehand
+set.seed(29283)
+# This data already has an Id column which we can make use of.
+# Let's create our training set using sample_frac. Fill in the blank.
+train_set <- train %>% sample_frac(.7)
+# let's create our testing set using the Id column. Fill in the blanks.
+test_set <- train %>% filter(!(train$Id %in% train_set$Id))
+```
+
+###Excercise 3
+```{r}
+# Fit a model with intercept only
+mod_0 <- lm(SalePrice ~ 1, data = train_set)
+# Double-check that the average SalePrice is equal to our model's coefficient
+mean(train_set$SalePrice)
+tidy(train_set)
+# Check the R-squared
+glance(mod_0)
+```
+
+###Excercise 4
+It looks like there is a significant relationship between overall quality and the GrLivArea. The results vary a lot based on the neighborhood chosen.
+```{r}
+# Fit a new model
+mod_2 <- lm(formula = GrLivArea ~ OverallQual + Neighborhood, data = train_set)
+
+tidy(mod_2)
+# Check the R-squared
+glance(mod_2)
+
+```
+
+
+###Excercise 5
+```{r}
+test_predictions <- predict(mod_2, newdata = test_set)
+rmse <- sqrt(mean((max(test_set$SalePrice) - min(test_set$SalePrice))^2))
+
+```
+? Not sure what values to use here.
+
+
+
+
+###Excercise 7
+```{r}
+sim1a <- tibble(
+x = rep(1:10, each = 3),
+y = x * 1.5 + 6 + rt(length(x), df = 2)
+)
+```
+
+?Struggling on this
