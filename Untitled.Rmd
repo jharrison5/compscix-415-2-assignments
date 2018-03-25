@@ -1,0 +1,12 @@
+---
+title: "COMPSCIX 415.2 Homework 8"
+author: "James Harrison"
+date: "3/25/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Homework 8 - the final HW!

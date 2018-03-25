@@ -1,0 +1,41 @@
+---
+title: "COMPSCIX 415.2 Homework 8"
+author: "James Harrison"
+date: "3/25/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+```
+
+#Homework 8 - the final HW!
+###Excercise 1
+There are 891 observations for 12 variables.
+```{r}
+train_t <- read.csv(file = "/Users/james.harrison/compscix-415-2-assignments/train_titanic.csv")
+
+train_t %>% mutate(
+  Survived = factor(Survived)
+)
+glimpse(train_t)
+```
+
+###Excercise 2
+```{r}
+# load packages
+library(broom)
+# When taking a random sample, it is often useful to set a seed so that
+# your work is reproducible. Setting a seed will guarantee that the same
+# random sample will be generated every time, so long as you always set the
+# same seed beforehand
+set.seed(29283)
+# This data already has an Id column which we can make use of.
+# Let's create our training set using sample_frac. Fill in the blank.
+train_set <- train_t %>% sample_frac(.7)
+# let's create our testing set using the Id column. Fill in the blanks.
+test_set <- train_t %>% filter(!(train_t$PassengerId %in% train_set$PassengerId))
+```
+
