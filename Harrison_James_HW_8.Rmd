@@ -9,18 +9,21 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 
 library(tidyverse)
+library(broom)
+library(rpart)
+library(partykit)
+library(ROCR)
 ```
 
 #Homework 8 - the final HW!
 ###Excercise 1
 There are 891 observations for 12 variables.
 ```{r}
-train_t <- read.csv(file = "/Users/james.harrison/compscix-415-2-assignments/train_titanic.csv")
-
-train_t %>% mutate(
+train_t <- read.csv(file = "/Users/james.harrison/compscix-415-2-assignments/train_titanic.csv") %>% mutate(
   Survived = factor(Survived)
 )
 glimpse(train_t)
+
 ```
 
 ###Excercise 2
@@ -38,4 +41,64 @@ train_set <- train_t %>% sample_frac(.7)
 # let's create our testing set using the Id column. Fill in the blanks.
 test_set <- train_t %>% filter(!(train_t$PassengerId %in% train_set$PassengerId))
 ```
+
+###Excercise 3
+It looks as if a lower class has a high correlation with not surviving, as does being male. A higher fare indicates a slight increase in chance of survival.
+```{r}
+library(broom)
+# Fit a model with intercept only
+mod_1 <- glm(Survived ~ Pclass + Sex + Fare, data = train_set, family = 'binomial')
+# take a look at the features and coefficients
+tidy(mod_1)
+```
+
+###Excercise 4
+A female passenger who has paid less than $26 for his fair is VERY unlikely to survive.
+```{r}
+tree_mod <- rpart(Survived ~ Pclass + Sex + Fare, data = train_set)
+plot(as.party(tree_mod))
+```
+
+###Excercise 5
+```{r}
+test_logit <- predict(mod_1, newdata = test_set, type = 'response')
+test_tree <- predict(tree_mod, newdata = test_set)[]
+
+# create the prediction objects for both models
+pred_logit <- prediction(predictions = test_logit, labels = test_set$Survived)
+pred_tree <- prediction(predictions = test_tree, labels = test_set$Survived)
+# get the FPR and TPR for the logistic model
+# recall that the ROC curve plots the FPR on the x-axis
+perf_logit <- performance(pred_logit, measure = 'tpr', x.measure = 'fpr')
+perf_logit_tbl <- tibble(perf_logit@x.values[[1]], perf_logit@y.values[[1]])
+# Change the names of the columns of the tibble
+names(perf_logit_tbl) <- c('fpr', 'tpr')
+# get the FPR and TPR for the tree model
+perf_tree <- performance(pred_tree, measure = 'tpr', x.measure = 'fpr')
+perf_tree_tbl <- tibble(perf_tree@x.values[[1]], perf_tree@y.values[[1]])
+# Change the names of the columns of the tibble
+names(perf_tree_tbl) <- c('fpr', 'tpr')
+# Plotting function for plotting a nice ROC curve using ggplot
+plot_roc <- function(perf_tbl) {
+p <- ggplot(data = perf_tbl, aes(x = fpr, y = tpr)) +
+geom_line(color = 'blue') +
+geom_abline(intercept = 0, slope = 1, lty = 3) +
+labs(x = 'False positive rate', y = 'True positive rate') +
+theme_bw()
+return(p)
+}
+# Create the ROC curves using the function we created above
+plot_roc(perf_logit_tbl)
+plot_roc(perf_tree_tbl)
+```
+```{r}
+# calculate the AUC
+auc_logit <- performance(pred_logit, measure = "auc")
+auc_tree <- performance(pred_tree, measure = "auc")
+# extract the AUC value
+auc_logit@y.values[[1]]
+auc_tree@y.values[[1]]
+```
+
+The two models are performing about the same.
 
