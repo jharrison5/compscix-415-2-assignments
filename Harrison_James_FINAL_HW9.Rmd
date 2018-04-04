@@ -10,3 +10,120 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 #The FINAL!!!
+
+###Bootstrap
+1.
+```{r}
+library(tidyverse)
+library(broom)
+library(rpart)
+library(partykit)
+library(ROCR)
+library(randomForest)
+
+train_t <- read.csv(file = "/Users/james.harrison/compscix-415-2-assignments/train_titanic.csv") %>% mutate(
+  Survived = factor(Survived)
+)
+glimpse(train_t)
+```
+
+2.
+```{r}
+library(tidyverse)
+library(modelr)
+titanic_boot <- bootstrap(data = train_t, n = 100)
+titanic_boot
+```
+
+3. 
+```{r}
+# since the strap column of titanic_boot is a list, we can
+# extract the resampled data using the double brackets [[]], # and just pick out a few of them to compare the number of
+# distinct rows
+as.tibble(titanic_boot$strap[[1]]) %>% n_distinct()
+as.tibble(titanic_boot$strap[[2]]) %>% n_distinct() 
+as.tibble(titanic_boot$strap[[3]]) %>% n_distinct()
+```
+
+4. 
+```{r}
+age_mean <- function() {
+data <- as.tibble(titanic_boot) # convert input data set to a tibble
+mean_age <- mean(data$Age, na.rm = TRUE) # take the mean of Age, remove NAs 
+return(mean_age) # return the mean value of Age from data
+}
+# loop through the 100 bootstrap samples and use the age_mean() # function
+all_means <- rep(NA, 100)
+# start the loop
+for(i in 1:100) {
+#all_means[i] <- age_mean(titanic_boot$strap[[i]])
+}
+# take a look at some of the means you calculated from your samples
+head(all_means)
+# convert to a tibble so we can use if for plotting
+all_means <- tibble(all_means = all_means)
+```
+
+5. 
+6. 
+
+###Random Forest
+1. 
+```{r}
+set.seed(987)
+model_data <- resample_partition(train_t, c(test = 0.3, train = 0.7))
+train_set <- as.tibble(model_data$train) 
+test_set <- as.tibble(model_data$test)
+```
+
+2. 
+```{r}
+tree_mod <- rpart(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked, data = train_set)
+plot(as.party(tree_mod))
+```
+
+3. 
+```{r}
+library(randomForest)
+rf_mod <- randomForest(Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked,
+                         data = train_set,
+                         ntrees = 500,
+                         mtry = 4,
+                         na.action = na.roughfix)
+
+rf_mod
+```
+
+4. 
+```{r}
+library(ROCR)
+
+rf_preds <- predict(rf_mod, newdata = test_set, type = 'prob')[,2] 
+tree_preds <- predict(tree_mod, newdata = test_set)[,2]
+
+pred_rf <- prediction(predictions = rf_preds, labels = test_set$Survived) 
+pred_tree <- prediction(predictions = tree_preds, labels = test_set$Survived)
+```
+
+5. 
+```{r}
+# get the FPR and TPR for the logistic model
+# recall that the ROC curve plots the FPR on the x-axis
+perf_rf <- performance(pred_rf, measure = 'tpr', x.measure = 'fpr') 
+perf_rf_tbl <- tibble(perf_rf@x.values[[1]], perf_rf@y.values[[1]])
+# Change the names of the columns of the tibble
+names(perf_rf_tbl) <- c('fpr', 'tpr')
+# get the FPR and TPR for the tree model
+perf_tree <- performance(pred_tree, measure = 'tpr', x.measure = 'fpr') 
+perf_tree_tbl <- tibble(perf_tree@x.values[[1]], perf_tree@y.values[[1]])
+# Change the names of the columns of the tibble
+names(perf_tree_tbl) <- c('fpr', 'tpr')
+# Plotting function for plotting a nice ROC curve using ggplot
+plot_roc <- function(perf_tbl) {
+p <- ggplot(data = perf_tbl, aes(x = fpr, y = tpr)) + geom_line(color = 'blue') +
+geom_abline(intercept = 0, slope = 1, lty = 3) +
+labs(x = 'False positive rate', y = 'True positive rate') + theme_bw()
+return(p)
+}
+```
+
